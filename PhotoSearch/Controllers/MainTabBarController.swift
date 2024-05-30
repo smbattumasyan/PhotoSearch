@@ -8,6 +8,8 @@
 import UIKit
 
 class MainTabBarController: UITabBarController {
+    
+    // MARK: - Life Cyrcle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -15,7 +17,7 @@ class MainTabBarController: UITabBarController {
         tabBar.unselectedItemTintColor = .white
         
         // Set the selected item color to yellow (or any color you prefer)
-        tabBar.tintColor = .orange
+        tabBar.tintColor = .green
         
         // Add a blur effect to the tab bar background
         let blurEffect = UIBlurEffect(style: .dark)

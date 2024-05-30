@@ -10,16 +10,20 @@ import Combine
 import SnapKit
 
 class FavoritesViewController: UIViewController {
+    
+    // MARK: - Private Properties
     private var collectionView: UICollectionView!
     private var viewModel = FavoritesViewModel()
     private var cancellables = Set<AnyCancellable>()
     
+    // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         bindViewModel()
     }
     
+    // MARK: - Private Methods
     private func setupUI() {
         view.backgroundColor = .systemBackground
         
@@ -49,6 +53,7 @@ class FavoritesViewController: UIViewController {
     }
 }
 
+// MARK: - UICollectionViewDelegate, UICollectionViewDataSource
 extension FavoritesViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewModel.likedPhotos.count
@@ -65,7 +70,8 @@ extension FavoritesViewController: UICollectionViewDelegate, UICollectionViewDat
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let photo = viewModel.photo(at: indexPath.item) {
             let detailVC = PhotoDetailViewController(photo: photo)
-            navigationController?.pushViewController(detailVC, animated: true)
+//            navigationController?.pushViewController(detailVC, animated: true)
+            present(detailVC, animated: true)
         }
     }
 }
