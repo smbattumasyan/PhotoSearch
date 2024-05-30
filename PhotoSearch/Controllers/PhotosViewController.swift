@@ -95,9 +95,7 @@ class PhotosViewController: UIViewController {
         viewModel.$isLoading
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in
-                if isLoading {
-                    self?.activityIndicator.startAnimating()
-                } else {
+                if !isLoading {
                     self?.activityIndicator.stopAnimating()
                 }
             }
