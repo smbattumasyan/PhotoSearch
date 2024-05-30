@@ -44,7 +44,6 @@ class PhotoDetailViewController: UIViewController {
         
         view.addSubview(imageView)
         imageView.contentMode = .scaleAspectFit
-        imageView.layer.cornerRadius = 8
         imageView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
             make.leading.trailing.equalToSuperview().inset(20)
