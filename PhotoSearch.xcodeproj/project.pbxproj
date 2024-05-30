@@ -13,6 +13,19 @@
 		174A5FA52C079FFC0088C136 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 174A5FA42C079FFC0088C136 /* Base */; };
 		174A5FA72C079FFD0088C136 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 174A5FA62C079FFD0088C136 /* Assets.xcassets */; };
 		174A5FAA2C079FFD0088C136 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 174A5FA92C079FFD0088C136 /* Base */; };
+		174A5FB22C07A0660088C136 /* PhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174A5FB12C07A0660088C136 /* PhotosViewController.swift */; };
+		174A5FB92C07A0D20088C136 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174A5FB82C07A0D20088C136 /* PhotoCell.swift */; };
+		174A5FBB2C07A0EC0088C136 /* PhotoDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174A5FBA2C07A0EC0088C136 /* PhotoDetailViewController.swift */; };
+		174A5FBD2C07A6B30088C136 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174A5FBC2C07A6B30088C136 /* NetworkManager.swift */; };
+		174A5FC12C07A7280088C136 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174A5FC02C07A7280088C136 /* Photo.swift */; };
+		174A5FC42C07A7D00088C136 /* PhotosViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174A5FC32C07A7D00088C136 /* PhotosViewModel.swift */; };
+		174A5FCC2C07A9950088C136 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 174A5FCB2C07A9950088C136 /* SnapKit */; };
+		174A5FD12C085D6E0088C136 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 174A5FD02C085D6E0088C136 /* SDWebImage */; };
+		174A5FD32C08A4570088C136 /* FavoritesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174A5FD22C08A4570088C136 /* FavoritesManager.swift */; };
+		174A5FD52C08A4880088C136 /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174A5FD42C08A4880088C136 /* FavoritesViewController.swift */; };
+		174A5FD72C08A4CB0088C136 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174A5FD62C08A4CB0088C136 /* MainTabBarController.swift */; };
+		174A5FD92C08AA620088C136 /* FavoritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174A5FD82C08AA620088C136 /* FavoritesViewModel.swift */; };
+		174A5FDE2C08B7670088C136 /* UnsplashAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174A5FDD2C08B7670088C136 /* UnsplashAPI.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +37,17 @@
 		174A5FA62C079FFD0088C136 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		174A5FA92C079FFD0088C136 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		174A5FAB2C079FFD0088C136 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		174A5FB12C07A0660088C136 /* PhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewController.swift; sourceTree = "<group>"; };
+		174A5FB82C07A0D20088C136 /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
+		174A5FBA2C07A0EC0088C136 /* PhotoDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailViewController.swift; sourceTree = "<group>"; };
+		174A5FBC2C07A6B30088C136 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		174A5FC02C07A7280088C136 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
+		174A5FC32C07A7D00088C136 /* PhotosViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewModel.swift; sourceTree = "<group>"; };
+		174A5FD22C08A4570088C136 /* FavoritesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesManager.swift; sourceTree = "<group>"; };
+		174A5FD42C08A4880088C136 /* FavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
+		174A5FD62C08A4CB0088C136 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
+		174A5FD82C08AA620088C136 /* FavoritesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewModel.swift; sourceTree = "<group>"; };
+		174A5FDD2C08B7670088C136 /* UnsplashAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsplashAPI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +55,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				174A5FD12C085D6E0088C136 /* SDWebImage in Frameworks */,
+				174A5FCC2C07A9950088C136 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,12 +85,71 @@
 				174A5F9D2C079FFC0088C136 /* AppDelegate.swift */,
 				174A5F9F2C079FFC0088C136 /* SceneDelegate.swift */,
 				174A5FA12C079FFC0088C136 /* ViewController.swift */,
+				174A5FDC2C08B6FB0088C136 /* NetworkManager */,
+				174A5FDB2C08AC7D0088C136 /* Controllers */,
+				174A5FDA2C08AC700088C136 /* Views */,
+				174A5FC22C07A7B30088C136 /* ViewModel */,
+				174A5FBF2C07A7160088C136 /* Model */,
+				174A5FBE2C07A6BB0088C136 /* Common */,
 				174A5FA32C079FFC0088C136 /* Main.storyboard */,
 				174A5FA62C079FFD0088C136 /* Assets.xcassets */,
 				174A5FA82C079FFD0088C136 /* LaunchScreen.storyboard */,
 				174A5FAB2C079FFD0088C136 /* Info.plist */,
 			);
 			path = PhotoSearch;
+			sourceTree = "<group>";
+		};
+		174A5FBE2C07A6BB0088C136 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				174A5FD22C08A4570088C136 /* FavoritesManager.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		174A5FBF2C07A7160088C136 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				174A5FC02C07A7280088C136 /* Photo.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		174A5FC22C07A7B30088C136 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				174A5FC32C07A7D00088C136 /* PhotosViewModel.swift */,
+				174A5FD82C08AA620088C136 /* FavoritesViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		174A5FDA2C08AC700088C136 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				174A5FB82C07A0D20088C136 /* PhotoCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		174A5FDB2C08AC7D0088C136 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				174A5FB12C07A0660088C136 /* PhotosViewController.swift */,
+				174A5FBA2C07A0EC0088C136 /* PhotoDetailViewController.swift */,
+				174A5FD42C08A4880088C136 /* FavoritesViewController.swift */,
+				174A5FD62C08A4CB0088C136 /* MainTabBarController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		174A5FDC2C08B6FB0088C136 /* NetworkManager */ = {
+			isa = PBXGroup;
+			children = (
+				174A5FBC2C07A6B30088C136 /* NetworkManager.swift */,
+				174A5FDD2C08B7670088C136 /* UnsplashAPI.swift */,
+			);
+			path = NetworkManager;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,6 +168,10 @@
 			dependencies = (
 			);
 			name = PhotoSearch;
+			packageProductDependencies = (
+				174A5FCB2C07A9950088C136 /* SnapKit */,
+				174A5FD02C085D6E0088C136 /* SDWebImage */,
+			);
 			productName = PhotoSearch;
 			productReference = 174A5F9A2C079FFC0088C136 /* PhotoSearch.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +200,10 @@
 				Base,
 			);
 			mainGroup = 174A5F912C079FFC0088C136;
+			packageReferences = (
+				174A5FCA2C07A9950088C136 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				174A5FCF2C085D6E0088C136 /* XCRemoteSwiftPackageReference "SDWebImage" */,
+			);
 			productRefGroup = 174A5F9B2C079FFC0088C136 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -138,9 +231,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				174A5FC42C07A7D00088C136 /* PhotosViewModel.swift in Sources */,
+				174A5FD32C08A4570088C136 /* FavoritesManager.swift in Sources */,
+				174A5FD72C08A4CB0088C136 /* MainTabBarController.swift in Sources */,
+				174A5FC12C07A7280088C136 /* Photo.swift in Sources */,
+				174A5FBB2C07A0EC0088C136 /* PhotoDetailViewController.swift in Sources */,
 				174A5FA22C079FFC0088C136 /* ViewController.swift in Sources */,
+				174A5FB92C07A0D20088C136 /* PhotoCell.swift in Sources */,
+				174A5FD52C08A4880088C136 /* FavoritesViewController.swift in Sources */,
+				174A5FBD2C07A6B30088C136 /* NetworkManager.swift in Sources */,
+				174A5FB22C07A0660088C136 /* PhotosViewController.swift in Sources */,
 				174A5F9E2C079FFC0088C136 /* AppDelegate.swift in Sources */,
 				174A5FA02C079FFC0088C136 /* SceneDelegate.swift in Sources */,
+				174A5FDE2C08B7670088C136 /* UnsplashAPI.swift in Sources */,
+				174A5FD92C08AA620088C136 /* FavoritesViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,7 +322,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -275,7 +379,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -300,6 +404,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -328,6 +433,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -363,6 +469,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		174A5FCA2C07A9950088C136 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+		174A5FCF2C085D6E0088C136 /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImage.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.19.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		174A5FCB2C07A9950088C136 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 174A5FCA2C07A9950088C136 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		174A5FD02C085D6E0088C136 /* SDWebImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 174A5FCF2C085D6E0088C136 /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 174A5F922C079FFC0088C136 /* Project object */;
 }

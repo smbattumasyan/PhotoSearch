@@ -10,11 +10,15 @@ import Combine
 import SnapKit
 
 class PhotosViewController: UIViewController {
+    
+    // MARK: - Private Properties
     private var collectionView: UICollectionView!
     private var searchBar: UISearchBar!
+    private var activityIndicator: UIActivityIndicatorView!
     private var viewModel = PhotosViewModel()
     private var cancellables = Set<AnyCancellable>()
     
+    // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -22,6 +26,7 @@ class PhotosViewController: UIViewController {
         viewModel.fetchPhotos(query: "green") // Initial fetch
     }
     
+    // MARK: - Private Methods
     private func setupUI() {
         view.backgroundColor = .systemBackground
         
@@ -29,9 +34,19 @@ class PhotosViewController: UIViewController {
         searchBar = UISearchBar()
         searchBar.delegate = self
         view.addSubview(searchBar)
+        searchBar.placeholder = "Green"
         searchBar.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.leading.trailing.equalToSuperview()
+        }
+        
+        // Set up activity indicator
+        activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.startAnimating()
+        view.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints { make in
+            make.center.equalToSuperview()
         }
         
         // Set up collection view
@@ -55,6 +70,7 @@ class PhotosViewController: UIViewController {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refreshPhotos), for: .valueChanged)
         collectionView.refreshControl = refreshControl
+        view.bringSubviewToFront(activityIndicator)
     }
     
     private func bindViewModel() {
@@ -69,18 +85,32 @@ class PhotosViewController: UIViewController {
         viewModel.$error
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
-            .sink { error in
+            .sink { [weak self] error in
+                self?.activityIndicator.stopAnimating()
                 print("Error fetching photos: \(error)")
                 // Handle error (e.g., show an alert)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                if isLoading {
+                    self?.activityIndicator.startAnimating()
+                } else {
+                    self?.activityIndicator.stopAnimating()
+                }
             }
             .store(in: &cancellables)
     }
     
     @objc private func refreshPhotos() {
-        viewModel.fetchPhotos(query: searchBar.text ?? "green")
+        let text = searchBar.text?.isEmpty ?? true ? "green" : searchBar.text!
+        viewModel.fetchPhotos(query: text)
     }
 }
 
+// MARK: - UICollectionViewDelegate, UICollectionViewDataSource
 extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewModel.photos.count
@@ -96,14 +126,21 @@ extension PhotosViewController: UICollectionViewDelegate, UICollectionViewDataSo
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let photo = viewModel.photos[indexPath.item]
         let detailVC = PhotoDetailViewController(photo: photo)
-//        navigationController?.pushViewController(detailVC, animated: true)
         present(detailVC, animated: true)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.item == viewModel.photos.count - 1 { // last cell
+            viewModel.fetchNextPage() // Fetch more photos
+        }
     }
 }
 
+// MARK: - UISearchBarDelegate
 extension PhotosViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let query = searchBar.text else { return }
         viewModel.fetchPhotos(query: query)
+        view.endEditing(true)
     }
 }
