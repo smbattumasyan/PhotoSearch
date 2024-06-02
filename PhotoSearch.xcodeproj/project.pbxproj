@@ -26,6 +26,8 @@
 		174A5FD72C08A4CB0088C136 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174A5FD62C08A4CB0088C136 /* MainTabBarController.swift */; };
 		174A5FD92C08AA620088C136 /* FavoritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174A5FD82C08AA620088C136 /* FavoritesViewModel.swift */; };
 		174A5FDE2C08B7670088C136 /* UnsplashAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174A5FDD2C08B7670088C136 /* UnsplashAPI.swift */; };
+		174A5FE92C0CBFFE0088C136 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174A5FE82C0CBFFE0088C136 /* CameraViewController.swift */; };
+		174A5FED2C0CC5DC0088C136 /* VisionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174A5FEC2C0CC5DC0088C136 /* VisionManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +50,8 @@
 		174A5FD62C08A4CB0088C136 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		174A5FD82C08AA620088C136 /* FavoritesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewModel.swift; sourceTree = "<group>"; };
 		174A5FDD2C08B7670088C136 /* UnsplashAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsplashAPI.swift; sourceTree = "<group>"; };
+		174A5FE82C0CBFFE0088C136 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		174A5FEC2C0CC5DC0088C136 /* VisionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisionManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +107,7 @@
 			isa = PBXGroup;
 			children = (
 				174A5FD22C08A4570088C136 /* FavoritesManager.swift */,
+				174A5FEC2C0CC5DC0088C136 /* VisionManager.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -139,6 +144,7 @@
 				174A5FBA2C07A0EC0088C136 /* PhotoDetailViewController.swift */,
 				174A5FD42C08A4880088C136 /* FavoritesViewController.swift */,
 				174A5FD62C08A4CB0088C136 /* MainTabBarController.swift */,
+				174A5FE82C0CBFFE0088C136 /* CameraViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -232,6 +238,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				174A5FC42C07A7D00088C136 /* PhotosViewModel.swift in Sources */,
+				174A5FED2C0CC5DC0088C136 /* VisionManager.swift in Sources */,
 				174A5FD32C08A4570088C136 /* FavoritesManager.swift in Sources */,
 				174A5FD72C08A4CB0088C136 /* MainTabBarController.swift in Sources */,
 				174A5FC12C07A7280088C136 /* Photo.swift in Sources */,
@@ -242,6 +249,7 @@
 				174A5FBD2C07A6B30088C136 /* NetworkManager.swift in Sources */,
 				174A5FB22C07A0660088C136 /* PhotosViewController.swift in Sources */,
 				174A5F9E2C079FFC0088C136 /* AppDelegate.swift in Sources */,
+				174A5FE92C0CBFFE0088C136 /* CameraViewController.swift in Sources */,
 				174A5FA02C079FFC0088C136 /* SceneDelegate.swift in Sources */,
 				174A5FDE2C08B7670088C136 /* UnsplashAPI.swift in Sources */,
 				174A5FD92C08AA620088C136 /* FavoritesViewModel.swift in Sources */,

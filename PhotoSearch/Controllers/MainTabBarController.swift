@@ -34,9 +34,13 @@ class MainTabBarController: UITabBarController {
         let favoritesVC = FavoritesViewController()
         favoritesVC.tabBarItem = UITabBarItem(title: "Favorites", image: UIImage(systemName: "heart"), tag: 1)
         
+        let cameraVC = CameraViewController()
+        cameraVC.tabBarItem = UITabBarItem(title: "Camera", image: UIImage(systemName: "camera"), tag: 2)
+        
         viewControllers = [
             UINavigationController(rootViewController: photosVC),
-            UINavigationController(rootViewController: favoritesVC)
+            UINavigationController(rootViewController: favoritesVC),
+            UINavigationController(rootViewController: cameraVC)
         ]
     }
 }
