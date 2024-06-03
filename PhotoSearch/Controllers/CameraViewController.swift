@@ -28,9 +28,13 @@ class CameraViewController: UIViewController, ARSCNViewDelegate {
     //MARK: Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         setupSceneView()
         if !isARSupported {
-            // Handle the case where AR is not supported
+            showAlert(message: "AR is not supported on this device.")
         }
     }
     
@@ -40,6 +44,10 @@ class CameraViewController: UIViewController, ARSCNViewDelegate {
             configShapeLayer()
             startARSession()
             autoDetectRectangle()
+
+            // Reset AR session
+            let configuration = ARWorldTrackingConfiguration()
+            sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
         }
     }
     
@@ -74,6 +82,7 @@ class CameraViewController: UIViewController, ARSCNViewDelegate {
     
     private func configShapeLayer() {
         shapeLayer.removeFromSuperlayer()
+        shapeLayer = CAShapeLayer()
         shapeLayer.bounds = UIScreen.main.bounds
         shapeLayer.anchorPoint = CGPoint.zero
         sceneView.layer.addSublayer(shapeLayer)
@@ -82,10 +91,12 @@ class CameraViewController: UIViewController, ARSCNViewDelegate {
     private func autoDetectRectangle() {
         timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
             guard let self = self else { return }
-            if let frame = self.sceneView.session.currentFrame?.capturedImage {
-                self.currentFrame = frame
-                self.visionManager.findRectangle(cvPixelBuffer: frame) { [weak self] (request, error) in
-                    self?.handleDetectedRectangles(request: request, error: error)
+            DispatchQueue.global(qos: .userInitiated).async {
+                if let frame = self.sceneView.session.currentFrame?.capturedImage {
+                    self.currentFrame = frame
+                    self.visionManager.findRectangle(cvPixelBuffer: frame) { [weak self] (request, error) in
+                        self?.handleDetectedRectangles(request: request, error: error)
+                    }
                 }
             }
         }
@@ -218,8 +229,6 @@ class CameraViewController: UIViewController, ARSCNViewDelegate {
         return UIImage(cgImage: cgImage)
     }
 
-
-    
     private func openPhotoDetailViewController(photo: Photo, image: UIImage) {
         let photoDetailVC = PhotoDetailViewController(photo: photo)
         photoDetailVC.capturedPhoto = image
@@ -230,6 +239,12 @@ class CameraViewController: UIViewController, ARSCNViewDelegate {
         let w: Int = Int(lhs.width - rhs.width)
         let h: Int = Int(lhs.height - rhs.height)
         return abs(w) + abs(h)
+    }
+    
+    private func showAlert(message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     deinit {
