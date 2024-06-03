@@ -12,6 +12,8 @@ import Combine
 
 class PhotoDetailViewController: UIViewController {
     
+    var capturedPhoto: UIImage?
+    
     // MARK: - Private Properties
     private let photo: Photo
     private let imageView = UIImageView()
@@ -73,7 +75,7 @@ class PhotoDetailViewController: UIViewController {
         if let url = URL(string: photo.urls.thumb) {
             imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder"))
         } else {
-            imageView.image = UIImage(named: "placeholder")
+            imageView.image = capturedPhoto ?? UIImage(named: "placeholder")
         }
         
         let authorTitle = "Description: "

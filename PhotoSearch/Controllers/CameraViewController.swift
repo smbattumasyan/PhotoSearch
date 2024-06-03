@@ -23,6 +23,7 @@ class CameraViewController: UIViewController, ARSCNViewDelegate {
     private var timer: Timer?
     private var captureAcceptingCount: Int = 0
     private var rectPoints: (topLeft: CGPoint, topRight: CGPoint, bottomRight: CGPoint, bottomLeft: CGPoint)?
+    private var lastPath = UIBezierPath()
     
     //MARK: Life Cycle
     override func viewDidLoad() {
@@ -39,7 +40,6 @@ class CameraViewController: UIViewController, ARSCNViewDelegate {
             configShapeLayer()
             startARSession()
             autoDetectRectangle()
-//            AuthorizationManager.checkCameraAccess()
         }
     }
     
@@ -119,14 +119,15 @@ class CameraViewController: UIViewController, ARSCNViewDelegate {
     
     private func shapeLayerRect(color: UIColor, observation: VNRectangleObservation) {
         let linePath = scalePath(observation: observation)
-        rectPoints = linePath.0
+        rectPoints = linePath.0!
         
-        if sizesDiffValue(lhs: linePath.1.bounds.size, rhs: shapeLayer.bounds.size) < 5 {
+        if sizesDiffValue(lhs: linePath.1.bounds.size, rhs: lastPath.bounds.size) < 5 {
             captureAcceptingCount += 1
         } else {
             captureAcceptingCount = 0
         }
         drawShapeLayer(color: color, linePath: linePath.1)
+        lastPath = linePath.1
     }
     
     private func scalePath(observation: VNRectangleObservation) -> ((CGPoint, CGPoint, CGPoint, CGPoint)?, UIBezierPath) {
@@ -166,34 +167,63 @@ class CameraViewController: UIViewController, ARSCNViewDelegate {
         guard let frame = sceneView.session.currentFrame else { return }
         
         let imageBuffer = frame.capturedImage
-        let imageSize = CGSize(width: CVPixelBufferGetWidth(imageBuffer), height: CVPixelBufferGetHeight(imageBuffer))
-        let maxWidthMultiplier = imageSize.width / sceneView.frame.width
-        let maxHeightMultiplier = imageSize.height / sceneView.frame.height
-        let scaleFactor = min(maxWidthMultiplier, maxHeightMultiplier)
-        let viewPort = CGRect(origin: .zero, size: CGSize(width: sceneView.frame.width * scaleFactor, height: sceneView.frame.height * scaleFactor))
-        let interfaceOrientation = UIApplication.shared.statusBarOrientation
         let ciImage = CIImage(cvImageBuffer: imageBuffer)
-        let normalizeTransform = CGAffineTransform(scaleX: 1.0/imageSize.width, y: 1.0/imageSize.height)
-        let flipTransform = (interfaceOrientation.isPortrait) ? CGAffineTransform(scaleX: -1, y: -1).translatedBy(x: -1, y: -1) : .identity
-        let displayTransform = frame.displayTransform(for: interfaceOrientation, viewportSize: viewPort.size)
-        let viewPortTransform = CGAffineTransform(scaleX: viewPort.width, y: viewPort.height)
-        let transformedImage = ciImage.transformed(by: normalizeTransform.concatenating(flipTransform).concatenating(displayTransform).concatenating(viewPortTransform)).cropped(to: viewPort)
+        let context = CIContext()
         
+        guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else { return }
+        let image = UIImage(cgImage: cgImage)
+        
+        guard let rectPoints = rectPoints else { return }
+        guard let croppedImage = cropImage(image: image, rectPoints: rectPoints) else {
+            print("Failed to crop image")
+            return
+        }
+
         timer?.invalidate()
-//        if let image = ImageFilters.getScannedImage(inputImage: transformedImage) {
-//            openEditScanViewController(image, ciImage: transformedImage)
-//        }
+        
+        // Create a Photo object with dummy data
+        let photo = Photo(id: UUID().uuidString, description: nil, altDescription: nil, urls: PhotoURLs(raw: "", full: "", regular: "", small: "", thumb: ""), createdAt: ISO8601DateFormatter().string(from: Date()))
+        openPhotoDetailViewController(photo: photo, image: croppedImage)
     }
+
     
-    private func openEditScanViewController(_ image: UIImage, ciImage: CIImage) {
-//        if let vc = EditScanViewController.storyboardInstance {
-//            vc.sceneViewRect = sceneView.frame
-//            vc.editImage = image
-//            vc.ciOriginalImage = ciImage
-//            vc.selectedPath = shapeLayer.path.map { UIBezierPath(cgPath: $0) } ?? UIBezierPath()
-//            vc.rectPoints = rectPoints
-//            navigationController?.pushViewController(vc, animated: true)
-//        }
+    private func cropImage(image: UIImage, rectPoints: (topLeft: CGPoint, topRight: CGPoint, bottomRight: CGPoint, bottomLeft: CGPoint)) -> UIImage? {
+        guard let ciImage = CIImage(image: image) else {
+            print("Failed to create CIImage from UIImage")
+            return nil
+        }
+
+        guard let perspectiveCorrection = CIFilter(name: "CIPerspectiveCorrection") else {
+            print("Failed to create CIFilter")
+            return nil
+        }
+
+        perspectiveCorrection.setValue(ciImage, forKey: kCIInputImageKey)
+        perspectiveCorrection.setValue(CIVector(cgPoint: rectPoints.topLeft), forKey: "inputTopLeft")
+        perspectiveCorrection.setValue(CIVector(cgPoint: rectPoints.topRight), forKey: "inputTopRight")
+        perspectiveCorrection.setValue(CIVector(cgPoint: rectPoints.bottomRight), forKey: "inputBottomRight")
+        perspectiveCorrection.setValue(CIVector(cgPoint: rectPoints.bottomLeft), forKey: "inputBottomLeft")
+
+        guard let outputImage = perspectiveCorrection.outputImage else {
+            print("Failed to create output image")
+            return nil
+        }
+
+        let context = CIContext()
+        guard let cgImage = context.createCGImage(outputImage, from: outputImage.extent) else {
+            print("Failed to create CGImage from output image")
+            return nil
+        }
+
+        return UIImage(cgImage: cgImage)
+    }
+
+
+    
+    private func openPhotoDetailViewController(photo: Photo, image: UIImage) {
+        let photoDetailVC = PhotoDetailViewController(photo: photo)
+        photoDetailVC.capturedPhoto = image
+        navigationController?.pushViewController(photoDetailVC, animated: true)
     }
     
     private func sizesDiffValue(lhs: CGSize, rhs: CGSize) -> Int {
@@ -207,7 +237,3 @@ class CameraViewController: UIViewController, ARSCNViewDelegate {
         timer = nil
     }
 }
-
-//extension CameraViewController: StoryboardInstance {
-//    static var storyboardName: StoryboardName = .camera
-//}
