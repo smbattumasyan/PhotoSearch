@@ -176,57 +176,53 @@ class CameraViewController: UIViewController, ARSCNViewDelegate {
     
     private func captureImageFromSceneView() {
         guard let frame = sceneView.session.currentFrame else { return }
-        
+
         let imageBuffer = frame.capturedImage
+
+        // Getting captured image size.
+        let imageSize = CGSize(width: CVPixelBufferGetWidth(imageBuffer), height: CVPixelBufferGetHeight(imageBuffer))
+
+        // Calculating maximum multipliers for scene view width and height.
+        let maxWidthMultiplier = imageSize.width / sceneView.frame.width
+        let maxHeightMultiplier = imageSize.height / sceneView.frame.height
+
+        // Calculating view port scaling factor for maximum possible resolution while keeping scene view aspect ratio.
+        let scaleFactor = min(maxWidthMultiplier, maxHeightMultiplier)
+
+        // The scaled view port used for cropping captured CIImage.
+        let viewPort = CGRect(origin: .zero, size: CGSize(width: sceneView.frame.width * scaleFactor, height: sceneView.frame.height * scaleFactor))
+
+        let interfaceOrientation = UIApplication.shared.statusBarOrientation
+
         let ciImage = CIImage(cvImageBuffer: imageBuffer)
+
+        // Getting normalized transform to be applied to ciimage.
+        let normalizeTransform = CGAffineTransform(scaleX: 1.0 / imageSize.width, y: 1.0 / imageSize.height)
+        
+        // Getting flip transform to be applied to ciimage.
+        let flipTransform = (interfaceOrientation.isPortrait) ? CGAffineTransform(scaleX: -1, y: -1).translatedBy(x: -1, y: -1) : .identity
+
+        // Getting display transform to be applied to ciimage.
+        let displayTransform = frame.displayTransform(for: interfaceOrientation, viewportSize: viewPort.size)
+
+        // Getting view port transform to be applied to ciimage.
+        let viewPortTransform = CGAffineTransform(scaleX: viewPort.width, y: viewPort.height)
+        
+        // Applying above transforms and cropping to scaled view port.
+        let transformedImage = ciImage
+            .transformed(by: normalizeTransform.concatenating(flipTransform).concatenating(displayTransform).concatenating(viewPortTransform))
+            .cropped(to: viewPort)
+        
+        // Convert the transformed CIImage to UIImage
         let context = CIContext()
-        
-        guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else { return }
-        let image = UIImage(cgImage: cgImage)
-        
-        guard let rectPoints = rectPoints else { return }
-        guard let croppedImage = cropImage(image: image, rectPoints: rectPoints) else {
-            print("Failed to crop image")
-            return
-        }
+        guard let cgImage = context.createCGImage(transformedImage, from: transformedImage.extent) else { return }
+        let capturedImage = UIImage(cgImage: cgImage)
 
         timer?.invalidate()
         
         // Create a Photo object with dummy data
         let photo = Photo(id: UUID().uuidString, description: nil, altDescription: nil, urls: PhotoURLs(raw: "", full: "", regular: "", small: "", thumb: ""), createdAt: ISO8601DateFormatter().string(from: Date()))
-        openPhotoDetailViewController(photo: photo, image: croppedImage)
-    }
-
-    
-    private func cropImage(image: UIImage, rectPoints: (topLeft: CGPoint, topRight: CGPoint, bottomRight: CGPoint, bottomLeft: CGPoint)) -> UIImage? {
-        guard let ciImage = CIImage(image: image) else {
-            print("Failed to create CIImage from UIImage")
-            return nil
-        }
-
-        guard let perspectiveCorrection = CIFilter(name: "CIPerspectiveCorrection") else {
-            print("Failed to create CIFilter")
-            return nil
-        }
-
-        perspectiveCorrection.setValue(ciImage, forKey: kCIInputImageKey)
-        perspectiveCorrection.setValue(CIVector(cgPoint: rectPoints.topLeft), forKey: "inputTopLeft")
-        perspectiveCorrection.setValue(CIVector(cgPoint: rectPoints.topRight), forKey: "inputTopRight")
-        perspectiveCorrection.setValue(CIVector(cgPoint: rectPoints.bottomRight), forKey: "inputBottomRight")
-        perspectiveCorrection.setValue(CIVector(cgPoint: rectPoints.bottomLeft), forKey: "inputBottomLeft")
-
-        guard let outputImage = perspectiveCorrection.outputImage else {
-            print("Failed to create output image")
-            return nil
-        }
-
-        let context = CIContext()
-        guard let cgImage = context.createCGImage(outputImage, from: outputImage.extent) else {
-            print("Failed to create CGImage from output image")
-            return nil
-        }
-
-        return UIImage(cgImage: cgImage)
+        openPhotoDetailViewController(photo: photo, image: capturedImage)
     }
 
     private func openPhotoDetailViewController(photo: Photo, image: UIImage) {
