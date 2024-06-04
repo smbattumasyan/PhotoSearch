@@ -176,60 +176,42 @@ class CameraViewController: UIViewController, ARSCNViewDelegate {
     
     private func captureImageFromSceneView() {
         guard let frame = sceneView.session.currentFrame else { return }
+
         let imageBuffer = frame.capturedImage
 
+        // Getting captured image size.
         let imageSize = CGSize(width: CVPixelBufferGetWidth(imageBuffer), height: CVPixelBufferGetHeight(imageBuffer))
-        let viewPort = sceneView.bounds
-        let viewPortSize = sceneView.bounds.size
 
-        let interfaceOrientation : UIInterfaceOrientation
-        if #available(iOS 13.0, *) {
-            interfaceOrientation = self.sceneView.window!.windowScene!.interfaceOrientation
-        } else {
-            interfaceOrientation = UIApplication.shared.statusBarOrientation
-        }
+        // Calculating maximum multipliers for scene view width and height.
+        let maxWidthMultiplier = imageSize.width / sceneView.frame.width
+        let maxHeightMultiplier = imageSize.height / sceneView.frame.height
 
-        let image = CIImage(cvImageBuffer: imageBuffer)
+        // Calculating view port scaling factor for maximum possible resolution while keeping scene view aspect ratio.
+        let scaleFactor = min(maxWidthMultiplier, maxHeightMultiplier)
 
-        // The camera image doesn't match the view rotation and aspect ratio
-        // Transform the image:
+        // The scaled view port used for cropping captured CIImage.
+        let viewPort = CGRect(origin: .zero, size: CGSize(width: sceneView.frame.width * scaleFactor, height: sceneView.frame.height * scaleFactor))
 
-        // 1) Convert to "normalized image coordinates"
-        let normalizeTransform = CGAffineTransform(scaleX: 1.0/imageSize.width, y: 1.0/imageSize.height)
+        let interfaceOrientation = UIApplication.shared.statusBarOrientation
 
-        // 2) Flip the Y axis (for some mysterious reason this is only necessary in portrait mode)
+        let ciImage = CIImage(cvImageBuffer: imageBuffer)
+
+        // Getting normalized transform to be applied to ciimage.
+        let normalizeTransform = CGAffineTransform(scaleX: 1.0 / imageSize.width, y: 1.0 / imageSize.height)
+        
+        // Getting flip transform to be applied to ciimage.
         let flipTransform = (interfaceOrientation.isPortrait) ? CGAffineTransform(scaleX: -1, y: -1).translatedBy(x: -1, y: -1) : .identity
 
-        // 3) Apply the transformation provided by ARFrame
-        // This transformation converts:
-        // - From Normalized image coordinates (Normalized image coordinates range from (0,0) in the upper left corner of the image to (1,1) in the lower right corner)
-        // - To view coordinates ("a coordinate space appropriate for rendering the camera image onscreen")
-        // See also: https://developer.apple.com/documentation/arkit/arframe/2923543-displaytransform
+        // Getting display transform to be applied to ciimage.
+        let displayTransform = frame.displayTransform(for: interfaceOrientation, viewportSize: viewPort.size)
 
-        let displayTransform = frame.displayTransform(for: interfaceOrientation, viewportSize: viewPortSize)
-
-        // 4) Convert to view size
-        let toViewPortTransform = CGAffineTransform(scaleX: viewPortSize.width, y: viewPortSize.height)
+        // Getting view port transform to be applied to ciimage.
+        let viewPortTransform = CGAffineTransform(scaleX: viewPort.width, y: viewPort.height)
         
-        guard let rectPoints = rectPoints else {
-          // Handle the case where rectPoints is nil
-          print("Error: rectPoints not provided for cropping")
-          return
-        }
-
-        // Assuming you have access to the topLeft, topRight, etc. points
-
-        let rect = CGRect(
-            origin: rectPoints.topLeft,
-          size: CGSize(
-            width: rectPoints.topRight.x - rectPoints.topLeft.x,
-            height: rectPoints.bottomRight.y - rectPoints.topLeft.y
-          )
-        )
-
-
-        // Transform the image and crop it to the viewport
-        let transformedImage = image.transformed(by: normalizeTransform.concatenating(flipTransform).concatenating(displayTransform).concatenating(toViewPortTransform)).cropped(to: rect)
+        // Applying above transforms and cropping to scaled view port.
+        let transformedImage = ciImage
+            .transformed(by: normalizeTransform.concatenating(flipTransform).concatenating(displayTransform).concatenating(viewPortTransform))
+            .cropped(to: viewPort)
         
         // Convert the transformed CIImage to UIImage
         let context = CIContext()
@@ -265,5 +247,53 @@ class CameraViewController: UIViewController, ARSCNViewDelegate {
     deinit {
         timer?.invalidate()
         timer = nil
+    }
+}
+
+
+extension UIImage {
+    func imageByApplyingClippingBezierPath(_ path: UIBezierPath) -> UIImage {
+        // Mask image using path
+        guard let maskedImage = imageByApplyingMaskingBezierPath(path) else { return UIImage() }
+
+        // Crop image to frame of path
+        let croppedImage = UIImage(cgImage: maskedImage.cgImage!.cropping(to: path.bounds)!)
+        
+        return croppedImage
+    }
+    
+    func imageByApplyingMaskingBezierPath(_ path: UIBezierPath) -> UIImage? {
+        // Define graphic context (canvas) to paint on
+        UIGraphicsBeginImageContext(size)
+        let context = UIGraphicsGetCurrentContext()!
+        context.saveGState()
+
+        // Set the clipping mask
+        path.addClip()
+        draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
+
+        guard let maskedImage = UIGraphicsGetImageFromCurrentImageContext() else { return nil }
+
+        // Restore previous drawing context
+        context.restoreGState()
+        UIGraphicsEndImageContext()
+
+        return maskedImage
+    }
+    
+    func clip(_ path: UIBezierPath) -> UIImage? {
+        let frame = CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height)
+
+        UIGraphicsBeginImageContextWithOptions(self.size, false, 0.0)
+        let context = UIGraphicsGetCurrentContext()
+        context?.saveGState()
+        path.addClip()
+        self.draw(in: frame)
+
+        guard let newImage = UIGraphicsGetImageFromCurrentImageContext() else { return nil }
+        context?.restoreGState()
+        UIGraphicsEndImageContext()
+
+        return newImage
     }
 }
