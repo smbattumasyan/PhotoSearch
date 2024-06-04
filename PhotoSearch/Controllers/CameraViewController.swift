@@ -219,6 +219,7 @@ class CameraViewController: UIViewController, ARSCNViewDelegate {
         let capturedImage = UIImage(cgImage: cgImage)
 
         timer?.invalidate()
+        sceneView.session.pause()
         
         // Create a Photo object with dummy data
         let photo = Photo(id: UUID().uuidString, description: nil, altDescription: nil, urls: PhotoURLs(raw: "", full: "", regular: "", small: "", thumb: ""), createdAt: ISO8601DateFormatter().string(from: Date()))
