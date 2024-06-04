@@ -36,8 +36,18 @@ class PhotoDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        
         configureView()
         observeFavorites()
+    }
+    
+    func detectLines(complete: @escaping((UIImage) -> Void)) {
+        DispatchQueue.global().async {
+            if let img = self.capturedPhoto {
+                let result = OpenCVWrapper.processImage(withOpenCV: img)
+                complete(result)
+            }
+        }
     }
     
     // MARK: - Private Methods
@@ -76,6 +86,11 @@ class PhotoDetailViewController: UIViewController {
             imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder"))
         } else {
             imageView.image = capturedPhoto ?? UIImage(named: "placeholder")
+            detectLines { img in
+                DispatchQueue.main.async {
+                    self.imageView.image = img
+                }
+            }
         }
         
         let authorTitle = "Description: "
