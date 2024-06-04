@@ -86,6 +86,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1749EF102C0F6F5F008E029C /* OpenCVWrappers */ = {
+			isa = PBXGroup;
+			children = (
+				1749EF022C0F3CD1008E029C /* OpenCVWrapper.h */,
+				1749EF032C0F3CD1008E029C /* OpenCVWrapper.mm */,
+				1749EF082C0F3D3C008E029C /* lines.cpp */,
+				1749EF062C0F3D3C008E029C /* lines.h */,
+				1749EF092C0F3D3D008E029C /* UIImage+OpenCV.h */,
+				1749EF0A2C0F3D3D008E029C /* UIImage+OpenCV.mm */,
+				1749EF072C0F3D3C008E029C /* UIImage+Rotate.h */,
+				1749EF052C0F3D3C008E029C /* UIImage+Rotate.m */,
+			);
+			path = OpenCVWrappers;
+			sourceTree = "<group>";
+		};
 		174A5F912C079FFC0088C136 = {
 			isa = PBXGroup;
 			children = (
@@ -110,14 +125,7 @@
 				174A5F9D2C079FFC0088C136 /* AppDelegate.swift */,
 				174A5F9F2C079FFC0088C136 /* SceneDelegate.swift */,
 				174A5FA12C079FFC0088C136 /* ViewController.swift */,
-				1749EF022C0F3CD1008E029C /* OpenCVWrapper.h */,
-				1749EF032C0F3CD1008E029C /* OpenCVWrapper.mm */,
-				1749EF082C0F3D3C008E029C /* lines.cpp */,
-				1749EF062C0F3D3C008E029C /* lines.h */,
-				1749EF092C0F3D3D008E029C /* UIImage+OpenCV.h */,
-				1749EF0A2C0F3D3D008E029C /* UIImage+OpenCV.mm */,
-				1749EF072C0F3D3C008E029C /* UIImage+Rotate.h */,
-				1749EF052C0F3D3C008E029C /* UIImage+Rotate.m */,
+				1749EF102C0F6F5F008E029C /* OpenCVWrappers */,
 				1749EF0E2C0F3D7B008E029C /* PrefixHeader.pch */,
 				174A5FDC2C08B6FB0088C136 /* NetworkManager */,
 				174A5FDB2C08AC7D0088C136 /* Controllers */,
