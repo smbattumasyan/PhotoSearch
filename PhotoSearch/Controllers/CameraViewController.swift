@@ -176,42 +176,60 @@ class CameraViewController: UIViewController, ARSCNViewDelegate {
     
     private func captureImageFromSceneView() {
         guard let frame = sceneView.session.currentFrame else { return }
-
         let imageBuffer = frame.capturedImage
 
-        // Getting captured image size.
         let imageSize = CGSize(width: CVPixelBufferGetWidth(imageBuffer), height: CVPixelBufferGetHeight(imageBuffer))
+        let viewPort = sceneView.bounds
+        let viewPortSize = sceneView.bounds.size
 
-        // Calculating maximum multipliers for scene view width and height.
-        let maxWidthMultiplier = imageSize.width / sceneView.frame.width
-        let maxHeightMultiplier = imageSize.height / sceneView.frame.height
+        let interfaceOrientation : UIInterfaceOrientation
+        if #available(iOS 13.0, *) {
+            interfaceOrientation = self.sceneView.window!.windowScene!.interfaceOrientation
+        } else {
+            interfaceOrientation = UIApplication.shared.statusBarOrientation
+        }
 
-        // Calculating view port scaling factor for maximum possible resolution while keeping scene view aspect ratio.
-        let scaleFactor = min(maxWidthMultiplier, maxHeightMultiplier)
+        let image = CIImage(cvImageBuffer: imageBuffer)
 
-        // The scaled view port used for cropping captured CIImage.
-        let viewPort = CGRect(origin: .zero, size: CGSize(width: sceneView.frame.width * scaleFactor, height: sceneView.frame.height * scaleFactor))
+        // The camera image doesn't match the view rotation and aspect ratio
+        // Transform the image:
 
-        let interfaceOrientation = UIApplication.shared.statusBarOrientation
+        // 1) Convert to "normalized image coordinates"
+        let normalizeTransform = CGAffineTransform(scaleX: 1.0/imageSize.width, y: 1.0/imageSize.height)
 
-        let ciImage = CIImage(cvImageBuffer: imageBuffer)
-
-        // Getting normalized transform to be applied to ciimage.
-        let normalizeTransform = CGAffineTransform(scaleX: 1.0 / imageSize.width, y: 1.0 / imageSize.height)
-        
-        // Getting flip transform to be applied to ciimage.
+        // 2) Flip the Y axis (for some mysterious reason this is only necessary in portrait mode)
         let flipTransform = (interfaceOrientation.isPortrait) ? CGAffineTransform(scaleX: -1, y: -1).translatedBy(x: -1, y: -1) : .identity
 
-        // Getting display transform to be applied to ciimage.
-        let displayTransform = frame.displayTransform(for: interfaceOrientation, viewportSize: viewPort.size)
+        // 3) Apply the transformation provided by ARFrame
+        // This transformation converts:
+        // - From Normalized image coordinates (Normalized image coordinates range from (0,0) in the upper left corner of the image to (1,1) in the lower right corner)
+        // - To view coordinates ("a coordinate space appropriate for rendering the camera image onscreen")
+        // See also: https://developer.apple.com/documentation/arkit/arframe/2923543-displaytransform
 
-        // Getting view port transform to be applied to ciimage.
-        let viewPortTransform = CGAffineTransform(scaleX: viewPort.width, y: viewPort.height)
+        let displayTransform = frame.displayTransform(for: interfaceOrientation, viewportSize: viewPortSize)
+
+        // 4) Convert to view size
+        let toViewPortTransform = CGAffineTransform(scaleX: viewPortSize.width, y: viewPortSize.height)
         
-        // Applying above transforms and cropping to scaled view port.
-        let transformedImage = ciImage
-            .transformed(by: normalizeTransform.concatenating(flipTransform).concatenating(displayTransform).concatenating(viewPortTransform))
-            .cropped(to: viewPort)
+        guard let rectPoints = rectPoints else {
+          // Handle the case where rectPoints is nil
+          print("Error: rectPoints not provided for cropping")
+          return
+        }
+
+        // Assuming you have access to the topLeft, topRight, etc. points
+
+        let rect = CGRect(
+            origin: rectPoints.topLeft,
+          size: CGSize(
+            width: rectPoints.topRight.x - rectPoints.topLeft.x,
+            height: rectPoints.bottomRight.y - rectPoints.topLeft.y
+          )
+        )
+
+
+        // Transform the image and crop it to the viewport
+        let transformedImage = image.transformed(by: normalizeTransform.concatenating(flipTransform).concatenating(displayTransform).concatenating(toViewPortTransform)).cropped(to: rect)
         
         // Convert the transformed CIImage to UIImage
         let context = CIContext()
