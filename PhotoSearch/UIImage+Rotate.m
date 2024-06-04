@@ -1,9 +1,8 @@
 //
-//  UIImage+OpenCV.m
-//  OpenCVSwiftLineDetection
+//  UIImage+Rotate.m
+//  PhotoSearch
 //
-//  Created by Pieter Meiresone on 09/10/2020.
-//  Copyright © 2020 Pieter Meiresone. All rights reserved.
+//  Created by Smbat Tumasyan on 04.06.24.
 //
 
 #import "UIImage+Rotate.h"
